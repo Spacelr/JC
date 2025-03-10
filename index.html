@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Ingreso</title>
+    <style>
+        /* Estilos generales de la pagina */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #2c3e50, #4ca1af); /* Fondo de degradado */
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Aquí agregas el estilo del logo */
+        #logo {
+            width: 300px;  /* Ajusta el tamaño del logo según tus necesidades */
+            height: auto;  /* Mantiene la proporción */
+            margin-bottom: 16px;  /* Espacio debajo del logo */
+        }
+
+        /* Contenedor principal de cada pantalla (login, subir archivo, verificación) */
+        .container {
+            width: 80%;
+            max-width: 400px;
+            margin: auto;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.6); /* Fondo oscuro con algo de transparencia */
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); /* Sombra sutil */
+        }
+
+        /* Estilo común para los campos de entrada (input), botones y select */
+        input, button, select {
+            width: 80%;  /* Ajuste del ancho de los campos a 80% */
+            padding: 12px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Estilo para los campos de texto (input) */
+        input {
+            background: rgba(255, 255, 255, 0.2); /* Fondo semitransparente */
+            color: white;
+            text-align: center;
+        }
+
+        /* Estilo para los textos de los placeholders (texto de ejemplo) */
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7); /* Color de texto de los placeholders */
+        }
+
+        /* Estilo para los botones */
+        button {
+            background: rgba(255, 255, 255, 0.3); /* Fondo semitransparente */
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.5); /* Borde sutil */
+        }
+
+        /* Estilo para el hover de los botones */
+        button:hover {
+            background: rgba(255, 255, 255, 0.5); /* Cambio de color al pasar el ratón */
+        }
+
+        /* Estilo para elementos ocultos */
+        .hidden { display: none; }
+
+        /* Estilo para el teclado numérico */
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+        }
+
+        /* Estilo para los botones del teclado numérico - font size es tamaño letra/ padding es alto banner */
+        .keypad button {
+            font-size: 16px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        /* Estilo para las estadísticas (total de registros, ingresados, etc.) */
+        .stats {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        /* Estilo para los mensajes de alerta */
+        .alert {
+            padding: 7px;
+            margin: 7px 0;
+            font-weight: bold;
+            display: none;
+            border-radius: 5px;
+        }
+        .alert-success { background-color: green; color: white; } /* Alerta de acceso correcto */
+        .alert-error { background-color: red; color: yellow; } /* Alerta de ya ingresado */
+        .alert-warning { background-color: yellow; color: rgb(245, 0, 0); } /* Alerta de no encontrado */
+
+        /* Nuevo margen para el título del login */
+        #login-screen h2 {
+            margin-bottom: 28px;  /* Espacio debajo del título */
+        }
+
+        /* Nuevo margen para el título de subir archivo */
+        #upload-screen h2 {
+            margin-bottom: 30px;  /* Espacio debajo del título */
+        }
+
+        /* Nuevo margen para el título de verificación */
+        #verification-screen h2 {
+            margin-bottom: 30px;  /* Espacio debajo del título */
+        }
+
+        /* Estilos para el cartel de alerta */
+        #alerta-menor {
+            background-color: red; /* Fondo rojo */
+            color: white; /* Letra blanca */
+            font-weight: bold;
+            font-size:14px;
+            padding: 3px;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: none; /* Inicialmente oculto */
+            text-align: center;
+            position: relative;
+        }
+
+        /* Efecto de parpadeo solo para el texto */
+        @keyframes parpadeo {
+            0% { color: white; }
+            50% { color: yellow; }
+            100% { color: rgb(0, 255, 76); }
+        }
+
+        #alert-text {
+            animation: parpadeo 1s infinite; /* Animación de parpadeo */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Pantalla 1: Login -->
+    <div id="login-screen" class="container">
+        <h2>INICIAR SESION</h2>
+        <h2></h2>
+        
+        <!-- Campo de usuario (Nombre de usuario) -->
+        <input type="text" id="username" placeholder="Usuario">
+        
+        <!-- Campo de contraseña -->
+        <input type="password" id="password" placeholder="Contraseña">
+        
+        <h2></h2>
+
+        <h2></h2>
+
+        <!-- Botón para iniciar sesión -->
+        <button onclick="login()">ACCEDER</button>
+        <img src="img/ima.png" alt="Logo" id="logo"> <!-- Agregar logo aquí -->
+        <h2 style="font-size: 10px;">®︎ sistemas informaticos - Toledo Sebastian 2025</h2>
+    </div>
+
+    <!-- Pantalla 2: Subir Excel -->
+    <div id="upload-screen" class="container hidden">
+        <h2>CARGAR EXCEL </h2>
+        <img src="img/ima.png" alt="Logo" id="logo"> <!-- Agregar logo aquí -->
+        <!-- Campo para seleccionar un archivo Excel -->
+        <input type="file" id="fileInput" accept=".xlsx">
+        <h2></h2>
+        <h2></h2>
+        <h2></h2>
+        <h2></h2>
+        <!-- Botón para cargar el archivo -->
+        <button onclick="loadExcel()">Cargar</button>
+        <h2></h2>
+    </div>
+
+    <!-- Pantalla 3: Verificación -->
+    <div id="verification-screen" class="container hidden">
+        <h2>SISTEMA DE ACCESO</h2>
+        <!-- Primer Cuadro: Apellido y Nombre (campo solo lectura) -->
+        <input type="text" id="full-name" placeholder="Apellido y Nombre" disabled>
+        
+        <!-- Segundo Cuadro: DNI (campo solo lectura) -->
+        <input type="text" id="dni" placeholder="Ingrese su DNI" readonly>
+        
+        <!-- Alertas de mensaje (success, error, warning) -->
+        <div id="alert-success" class="alert alert-success"></div>
+        <div id="alert-error" class="alert alert-error"></div>
+        <div id="alert-warning" class="alert alert-warning"></div>
+        <!-- Nuevo cartel de alerta (Posible menor de edad) -->
+        <div id="alerta-menor" class="alert alert-warning hidden">
+            <p id="alert-text">⚠️ POSIBLE MENOR DE EDAD ⚠️</p>
+        </div>
+
+        <div class="stats">
+            <!-- Estadísticas de registros, ingresados y por ingresar -->
+            <p>Total Registrados: <span id="total-registrados">0</span></p>
+            <p>Ya Ingresaron: <span id="total-ingresados">0</span></p>
+            <p>Por Ingresar: <span id="total-por-ingresar">0</span></p>
+        </div>
+
+        <!-- Teclado numérico para ingresar el DNI -->
+        <div class="keypad">
+            <button onclick="appendToDNI('1')">1</button>
+            <button onclick="appendToDNI('2')">2</button>
+            <button onclick="appendToDNI('3')">3</button>
+            <button onclick="appendToDNI('4')">4</button>
+            <button onclick="appendToDNI('5')">5</button>
+            <button onclick="appendToDNI('6')">6</button>
+            <button onclick="appendToDNI('7')">7</button>
+            <button onclick="appendToDNI('8')">8</button>
+            <button onclick="appendToDNI('9')">9</button>
+            <button onclick="clearDNI()">X</button>
+            <button onclick="appendToDNI('0')">0</button>
+            <button onclick="searchDNI()">OK</button>
+        </div>
+
+        <!-- Botón pequeño para guardar el archivo Excel con los registros -->
+        <button onclick="saveExcel()" style="width: 20px; height: 30px; padding: 10px; font-size: 16px; border-radius: 8px; background-color: #4CAF50; color: white; border: none; cursor: pointer; transition: all 0.3s ease;">
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.2/xlsx.full.min.js"></script>
+    <script>
+        let users = { "1": "1" }; 
+
+        // Agregar más usuarios y contraseñas
+        users["chori"] = "101012";
+        users["seba"] = "1210";
+        users["jc"] = "120230";
+
+        let dataList = [];
+        const eventName = "Evento 2025"; // Nombre del evento (puedes cambiarlo dinámicamente si lo deseas)
+
+        function login() {
+            let user = document.getElementById('username').value; 
+            let pass = document.getElementById('password').value; 
+            if (users[user] === pass) {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('upload-screen').classList.remove('hidden');
+            } else {
+                alert("Usuario o contraseña incorrectos.");
+            }
+        }
+
+        function loadExcel() {
+            let file = document.getElementById('fileInput').files[0]; 
+            if (!file) return alert("Seleccione un archivo.");
+
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let data = new Uint8Array(e.target.result);
+                let workbook = XLSX.read(data, { type: 'array' });
+                let sheet = workbook.Sheets[workbook.SheetNames[0]];
+                let json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+                dataList = json.slice(1).map(row => ({ name: row[1], dni: String(row[2]), status: '' }));
+                updateStats();
+                document.getElementById('upload-screen').classList.add('hidden');
+                document.getElementById('verification-screen').classList.remove('hidden');
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function appendToDNI(num) {
+            let dniField = document.getElementById('dni');
+            dniField.value += num;
+        }
+
+        function clearDNI() {
+            document.getElementById('dni').value = '';
+            document.getElementById('full-name').value = '';
+            document.getElementById('alert-success').style.display = 'none';
+            document.getElementById('alert-error').style.display = 'none';
+            document.getElementById('alert-warning').style.display = 'none';
+            document.getElementById('alerta-menor').style.display = 'none'; // Ocultar alerta de menor
+        }
+
+        function searchDNI() {
+            let dni = document.getElementById('dni').value;
+            let person = dataList.find(p => p.dni === dni);
+
+            // Ocultar los mensajes anteriores
+            document.getElementById('alert-success').style.display = 'none';
+            document.getElementById('alert-error').style.display = 'none';
+            document.getElementById('alert-warning').style.display = 'none';
+            document.getElementById('alerta-menor').style.display = 'none'; // Ocultar alerta de menor
+
+            if (person) {
+                document.getElementById('full-name').value = person.name;
+
+                // Verificar si el DNI es mayor a 48.000.000
+                if (parseInt(dni) > 48000000) {
+                    document.getElementById('alerta-menor').style.display = 'block'; // Mostrar alerta
+                }
+
+                if (person.status === "Chequeado") {
+                    document.getElementById('alert-error').innerText = "⚠️ YA INGRESO ⚠️";
+                    document.getElementById('alert-error').style.display = 'block';
+                } else {
+                    document.getElementById('alert-success').innerText = "🤩 INGRESO CORRECTO 🤩";
+                    document.getElementById('alert-success').style.display = 'block';
+                    person.status = "Chequeado";  // Marcamos como chequeado
+                    updateStats();
+                }
+            } else {
+                document.getElementById('alert-warning').innerText = "❌ DNI NO REGISTRADO ❌";
+                document.getElementById('alert-warning').style.display = 'block';
+            }
+        }
+
+        function updateStats() {
+            let totalRegistrados = dataList.length;
+            let totalIngresados = dataList.filter(p => p.status === "Chequeado").length;
+            let totalPorIngresar = totalRegistrados - totalIngresados;
+
+            document.getElementById('total-registrados').innerText = totalRegistrados;
+            document.getElementById('total-ingresados').innerText = totalIngresados;
+            document.getElementById('total-por-ingresar').innerText = totalPorIngresar;
+        }
+
+        function saveExcel() {
+            let ws = XLSX.utils.json_to_sheet(dataList);
+            let wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, eventName);
+            XLSX.writeFile(wb, `${eventName}.xlsx`);
+        }
+    </script>
+</body>
+</html>
