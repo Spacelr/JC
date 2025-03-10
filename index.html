@@ -8,7 +8,7 @@
         /* Estilos generales de la pagina */
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #2c3e50, #4ca1af); /* Fondo de degradado */
+            background: linear-gradient(135deg, #2c3e50, #473c64); /* Fondo de degradado */
             color: white;
             text-align: center;
             margin: 0;
@@ -19,15 +19,15 @@
         #logo {
             width: 300px;  /* Ajusta el tamaño del logo según tus necesidades */
             height: auto;  /* Mantiene la proporción */
-            margin-bottom: 16px;  /* Espacio debajo del logo */
+            margin-bottom: 5px;  /* Espacio debajo del logo */
         }
 
         /* Contenedor principal de cada pantalla (login, subir archivo, verificación) */
         .container {
-            width: 80%;
+            width: 100%;
             max-width: 400px;
             margin: auto;
-            padding: 12px;
+            padding: 79px;
             background: rgba(0, 0, 0, 0.6); /* Fondo oscuro con algo de transparencia */
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); /* Sombra sutil */
@@ -55,6 +55,15 @@
             color: rgba(255, 255, 255, 0.7); /* Color de texto de los placeholders */
         }
 
+        /* Estilo general para los contenedores de los botones */
+        .container {
+        display: flex; /* Usamos flexbox para centrar los elementos */
+        flex-direction: column; /* Los botones estarán en una columna */
+        align-items: center; /* Centra los botones horizontalmente */
+        justify-content: center; /* Centra los botones verticalmente si es necesario */
+        
+        }   
+
         /* Estilo para los botones */
         button {
             background: rgba(255, 255, 255, 0.3); /* Fondo semitransparente */
@@ -62,6 +71,11 @@
             font-weight: bold;
             cursor: pointer;
             border: 1px solid rgba(255, 255, 255, 0.5); /* Borde sutil */
+            width: 100%; /* Ajuste el ancho de los botones al 80% del contenedor */
+            padding: 10px; /* Espaciado interno para los botones */
+            margin: 15px 0; /* Espaciado entre los botones */
+            border-radius: 10px; /* Bordes redondeados */
+            font-size: 15px; /* Aumentamos el tamaño de la fuente */
         }
 
         /* Estilo para el hover de los botones */
@@ -72,11 +86,12 @@
         /* Estilo para elementos ocultos */
         .hidden { display: none; }
 
-        /* Estilo para el teclado numérico */
+        /* Estilo para el teclado numérico - DISTANCIA HORIZONTAL DE BOTON A BOTON */
         .keypad {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 5px;
+            row-gap: 10px; /* Ajusta la distancia entre las filas (debe reducirse entre fila 1 y fila 4) */
+            column-gap: 50px; /* Ajusta la distancia entre las columnas - HORIZONTALMENTE */
         }
 
         /* Estilo para los botones del teclado numérico - font size es tamaño letra/ padding es alto banner */
@@ -155,7 +170,7 @@
         
         <!-- Campo de usuario (Nombre de usuario) -->
         <input type="text" id="username" placeholder="Usuario">
-        
+    
         <!-- Campo de contraseña -->
         <input type="password" id="password" placeholder="Contraseña">
         
@@ -167,18 +182,18 @@
         <button onclick="login()">ACCEDER</button>
         <img src="img/ima.png" alt="Logo" id="logo"> <!-- Agregar logo aquí -->
         <h2 style="font-size: 10px;">®︎ sistemas informaticos - Toledo Sebastian 2025</h2>
+        <h2 style="font-size: 10px;">2025</h2>
     </div>
 
     <!-- Pantalla 2: Subir Excel -->
     <div id="upload-screen" class="container hidden">
-        <h2>CARGAR EXCEL </h2>
-        <img src="img/ima.png" alt="Logo" id="logo"> <!-- Agregar logo aquí -->
+        <h2 style="font-size: 20px;">CARGAR ARCHIVO</h2>
+        
         <!-- Campo para seleccionar un archivo Excel -->
+        <h2></h2>
         <input type="file" id="fileInput" accept=".xlsx">
         <h2></h2>
-        <h2></h2>
-        <h2></h2>
-        <h2></h2>
+        <img src="img/ima.png" alt="Logo" id="logo"> <!-- Agregar logo aquí -->
         <!-- Botón para cargar el archivo -->
         <button onclick="loadExcel()">Cargar</button>
         <h2></h2>
@@ -193,6 +208,9 @@
         <!-- Segundo Cuadro: DNI (campo solo lectura) -->
         <input type="text" id="dni" placeholder="Ingrese su DNI" readonly>
         
+        <!-- Nuevo cuadro: Sector -->
+        <input type="text" id="sector" placeholder="Sector" disabled>
+
         <!-- Alertas de mensaje (success, error, warning) -->
         <div id="alert-success" class="alert alert-success"></div>
         <div id="alert-error" class="alert alert-error"></div>
@@ -227,6 +245,7 @@
 
         <!-- Botón pequeño para guardar el archivo Excel con los registros -->
         <button onclick="saveExcel()" style="width: 20px; height: 30px; padding: 10px; font-size: 16px; border-radius: 8px; background-color: #4CAF50; color: white; border: none; cursor: pointer; transition: all 0.3s ease;">
+        
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.2/xlsx.full.min.js"></script>
@@ -263,7 +282,12 @@
                 let sheet = workbook.Sheets[workbook.SheetNames[0]];
                 let json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-                dataList = json.slice(1).map(row => ({ name: row[1], dni: String(row[2]), status: '' }));
+                dataList = json.slice(1).map(row => ({ 
+                    name: row[1], 
+                    dni: String(row[2]), 
+                    sector: row[4],  // Ahora toma los datos de la columna E (índice 4)
+                    status: '' 
+                }));
                 updateStats();
                 document.getElementById('upload-screen').classList.add('hidden');
                 document.getElementById('verification-screen').classList.remove('hidden');
@@ -279,6 +303,7 @@
         function clearDNI() {
             document.getElementById('dni').value = '';
             document.getElementById('full-name').value = '';
+            document.getElementById('sector').value = '';  // Limpiar sector
             document.getElementById('alert-success').style.display = 'none';
             document.getElementById('alert-error').style.display = 'none';
             document.getElementById('alert-warning').style.display = 'none';
@@ -297,6 +322,7 @@
 
             if (person) {
                 document.getElementById('full-name').value = person.name;
+                document.getElementById('sector').value = person.sector;  // Mostrar el sector de la persona
 
                 // Verificar si el DNI es mayor a 48.000.000
                 if (parseInt(dni) > 48000000) {
@@ -326,13 +352,6 @@
             document.getElementById('total-registrados').innerText = totalRegistrados;
             document.getElementById('total-ingresados').innerText = totalIngresados;
             document.getElementById('total-por-ingresar').innerText = totalPorIngresar;
-        }
-
-        function saveExcel() {
-            let ws = XLSX.utils.json_to_sheet(dataList);
-            let wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, eventName);
-            XLSX.writeFile(wb, `${eventName}.xlsx`);
         }
     </script>
 </body>
