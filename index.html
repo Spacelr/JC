@@ -24,10 +24,10 @@
 
         /* Contenedor principal de cada pantalla (login, subir archivo, verificación) */
         .container {
-            width: 100%;
-            max-width: 400px;
+            width: 90%;
+            max-width: 280px;
             margin: auto;
-            padding: 79px;
+            padding: 20px;
             background: rgba(0, 0, 0, 0.6); /* Fondo oscuro con algo de transparencia */
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); /* Sombra sutil */
@@ -73,7 +73,7 @@
             border: 1px solid rgba(255, 255, 255, 0.5); /* Borde sutil */
             width: 100%; /* Ajuste el ancho de los botones al 80% del contenedor */
             padding: 10px; /* Espaciado interno para los botones */
-            margin: 15px 0; /* Espaciado entre los botones */
+            margin: 48px 0; /* Espaciado entre los botones */
             border-radius: 10px; /* Bordes redondeados */
             font-size: 15px; /* Aumentamos el tamaño de la fuente */
         }
@@ -90,16 +90,48 @@
         .keypad {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            row-gap: 10px; /* Ajusta la distancia entre las filas (debe reducirse entre fila 1 y fila 4) */
-            column-gap: 50px; /* Ajusta la distancia entre las columnas - HORIZONTALMENTE */
+            row-gap: 1px; /* Ajusta la distancia entre las filas (debe reducirse entre fila 1 y fila 4) */
+            column-gap: 1px; /* Ajusta la distancia entre las columnas - HORIZONTALMENTE */
+            max-width: 100%; /* Asegurarse de que el teclado no exceda el ancho de la pantalla */
+            box-sizing: border-box;
         }
 
-        /* Estilo para los botones del teclado numérico - font size es tamaño letra/ padding es alto banner */
+        /* Estilo para los botones del teclado numérico - Escalabilidad y centrar los botones */
+        .keypad {
+        display: grid; /* Usamos grid para distribuir los botones */
+        grid-template-columns: repeat(3, 1fr); /* Tres columnas para los botones */
+        gap: 5px; /* Espacio entre los botones */
+        justify-items: center; /* Centra los botones horizontalmente */
+        align-items: center; /* Centra los botones verticalmente */
+        width: 100%; /* Asegura que el teclado ocupe el 100% del ancho */
+        padding: 10px; /* Espaciado alrededor del teclado */
+        
+        }
+
+        /* Estilo para los botones del teclado numérico */
         .keypad button {
-            font-size: 16px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
+        font-size: 27px; /* Tamaño de la fuente ajustado al ancho de la pantalla */
+        padding: 0; /* Eliminar padding para asegurar que los botones sean cuadrados */
+        background: rgba(255, 255, 255, 0.2); /* Fondo transparente */
+        border-radius: 4px; /* Bordes redondeados */
+        width: 100%; /* Aseguramos que el ancho sea del 28% del contenedor */
+        height: 0px; /* El alto se define automáticamente a través de la relación de aspecto */
+        padding-bottom: 50%; /* Esto crea un aspecto cuadrado, ya que el alto se iguala al ancho */
+        aspect-ratio: 15; /* Esto asegura que el botón sea cuadrado */
+        box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el tamaño */
+        justify-content: center;
+        align-items: center;
+        margin: 0; /* Elimina el margen entre los botones */
+        
+        }
+
+        /* Asegurarse que la estructura de la cuadrícula sea más fluida */
+        .keypad {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 3 columnas */
+        row-gap: 2px; /* Distancia entre las filas */
+        column-gap: 2px; /* Distancia entre las columnas */
+
         }
 
         /* Estilo para las estadísticas (total de registros, ingresados, etc.) */
@@ -166,15 +198,12 @@
     <!-- Pantalla 1: Login -->
     <div id="login-screen" class="container">
         <h2>INICIAR SESION</h2>
-        <h2></h2>
-        
         <!-- Campo de usuario (Nombre de usuario) -->
         <input type="text" id="username" placeholder="Usuario">
     
         <!-- Campo de contraseña -->
         <input type="password" id="password" placeholder="Contraseña">
         
-        <h2></h2>
 
         <h2></h2>
 
@@ -195,13 +224,14 @@
         <h2></h2>
         <img src="img/ima.png" alt="Logo" id="logo"> <!-- Agregar logo aquí -->
         <!-- Botón para cargar el archivo -->
-        <button onclick="loadExcel()">Cargar</button>
+        <h2></h2>
+        <button onclick="loadExcel()">CARGAR</button>
         <h2></h2>
     </div>
 
     <!-- Pantalla 3: Verificación -->
     <div id="verification-screen" class="container hidden">
-        <h2>SISTEMA DE ACCESO</h2>
+        <h2 style="font-size: 14px;">SISTEMA DE ACCESO</h2>
         <!-- Primer Cuadro: Apellido y Nombre (campo solo lectura) -->
         <input type="text" id="full-name" placeholder="Apellido y Nombre" disabled>
         
@@ -242,11 +272,18 @@
             <button onclick="appendToDNI('0')">0</button>
             <button onclick="searchDNI()">OK</button>
         </div>
+        
+         <!-- Botón pequeño para guardar el archivo Excel con los registros -->
+            <button onclick="saveExcel()" 
+            style="width: 100px; height: 23px; padding: 5px; font-size: 14px; border-radius: 8px; 
+             background-color: #4CAF50; justify-content: center; color: white; border: none; cursor: pointer; 
+           transition: all 0.3s ease; margin-top: 10px;">
+            FINALIZAR
+            </button>
 
-        <!-- Botón pequeño para guardar el archivo Excel con los registros -->
-        <button onclick="saveExcel()" style="width: 20px; height: 30px; padding: 10px; font-size: 16px; border-radius: 8px; background-color: #4CAF50; color: white; border: none; cursor: pointer; transition: all 0.3s ease;">
         
     </div>
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.2/xlsx.full.min.js"></script>
     <script>
@@ -343,6 +380,15 @@
                 document.getElementById('alert-warning').style.display = 'block';
             }
         }
+
+        function saveExcel() {
+            const ws = XLSX.utils.json_to_sheet(dataList);  // Convierte la lista de datos a una hoja Excel
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Registros');  // Añade la hoja al archivo Excel
+            XLSX.writeFile(wb, 'registros_evento_2025.xlsx');  // Guarda el archivo con nombre específico
+        
+        }
+
 
         function updateStats() {
             let totalRegistrados = dataList.length;
